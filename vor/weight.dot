@@ -1,0 +1,11 @@
+digraph tree {
+    "a";
+    "a0";
+    "a1";
+    "a1a";
+    "a2";
+    "a" -> "a0" [style=bold,label=2];
+    "a" -> "a1" [style=bold,label=3];
+    "a" -> "a2" [style=bold,label=0];
+    "a1" -> "a1a" [style=bold,label=0];
+}

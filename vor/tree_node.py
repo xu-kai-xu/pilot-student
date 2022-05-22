@@ -222,19 +222,121 @@ class TreeNode:
         self.parent = node
         node.add_child(self)
 
+    def __repr__(self):
+        """
+        这个是在programming bitcoin 这本书中学来的
+        如果没有它，返回的就只是 tree 的地址，
+        类似 [<vor.tree_node.TreeNode at 0x1a0763770a0>] 这样
+        有这个之后，返回的是 tree.data 的内容
+        """
+        return (self.data)
+
+    def show_tree(self, prefix='', last=True):
+        """
+        打印以 self 节点为根节点的树结构。
+        https://github.com/neolee/pilot/issues/1029
+        """
+        print(prefix, '└─ ' if last else '├─ ', self.data, sep='')
+        prefix += '     ' if last else '│   '
+        count = len(self.children)
+        for n, node in enumerate(self.children):
+            last = n == (count - 1)
+            node.show_tree(prefix, last) 
 
 
+if __name__ == '__main__':
+    """
+    测试
+    """
+    # from vor.tree_node import TreeNode
 
+    root = TreeNode(name='root', data='中国', parent=None, children=None)
 
+    node1 = TreeNode(name='node1', data='山西', parent=root)
+    node2 = TreeNode(name='node2', data='湖北', parent=root)
+    node3 = TreeNode(name='node3', data='北京', parent=root)
+    node4 = TreeNode(name='node4', data='上海', parent=root)
 
-            
+    node11 = TreeNode(name='node11', data='晋城', parent=node1)
+    node12 = TreeNode(name='node12', data='长治', parent=node1)
+
+    node21 = TreeNode(name='node21', data='武汉', parent=node2)
+    node22 = TreeNode(name='node22', data='鄂州', parent=node2)
+
+    node31 = TreeNode(name='node31', data='北京', parent=node3)
+
+    node111 = TreeNode(name='node111', data='阳城', parent=node11)
+    node211 = TreeNode(name='node211', data='洪山', parent=node21)
+    node311 = TreeNode(name='node311', data='昌平', parent=node31)
+
+    # find parent
+    print(node1.find_parent())
+    print(node21.find_parent())
+
+    # find all children
+    print(root.find_children())
+    print(node11.find_children())
+
+    # 找出某个特定的 child
+    print(node1.find_child(data='晋城'))
+    try:
+        print(root.find_child(name='山西'))
+    except ValueError:
+        print("Sorry, no node with the name *山西*")
+    print(root.find_child(name='node4'))
+
+    # fild siblings
+    print(node2.find_siblings())
+    print(node21.find_siblings())
+    print(root.find_siblings())
+
+    # find same tier 同层的所有节点
+    print(root.find_same_tier())
+
+    # node_tier
+    print(root.node_tier())
+    print(node111.node_tier())
+    print(node21.node_tier())
+
+    # find_ancestors
+    print(node11.find_ancestors())
+    print(node111.find_ancestors())
+    print(node311.find_ancestors())
+
+    # find_path
+    print(node111.find_path(node1))
+    print(node11.find_path(node211))
     
+    # find distance
+    print(node111.find_distance(node1))
+    print(node11.find_distance(node211))  
 
+    # show tree
+    print(root.show_tree())
+    print(node1.show_tree())
 
+    #add child
+    node221 = TreeNode(name='node221', data='地大新校区')
+    node22.add_child(node221)
+    print(node22.show_tree())
+    print(node22.find_children())
+    print(root.show_tree())
 
+    # set parent
+    print(root.find_children())
+    print(node2.set_parent(node111))
+    print(root.find_children())
+    print(node111.find_children())
 
+    # show tree
+    print(root.show_tree())
+    print(node1.show_tree())
 
+    # del node
+    print(root.find_children())
+    print(node2.del_node())
+    print(root.find_children())
 
-
-
-
+    # show tree
+    print(root.show_tree())
+    print(node1.show_tree())
