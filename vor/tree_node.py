@@ -222,14 +222,37 @@ class TreeNode:
         self.parent = node
         node.add_child(self)
 
+    def _to_strings(self, xs, _prefix='', _last=True):
+        """
+        编程课第十二课 print tree 方法的五次改进
+        """
+        xs.append(''.join([_prefix, '└─' if _last else '├─ ', root.name]))
+        _prefix += ' ' if _last else '│ '
+    
+        count = len(self.children)
+        for n, node in enumerate(self.children):
+            _last = n == (count - 1)
+            node._to_strings(xs, _prefix, _last)
+
+    
+    # def __repr__(self):
+    #     """
+    #     这个是在programming bitcoin 这本书中学来的
+    #     如果没有它，返回的就只是 tree 的地址，
+    #     类似 [<vor.tree_node.TreeNode at 0x1a0763770a0>] 这样
+    #     有这个之后，返回的是 tree.data 的内容
+    #     """
+    #     return (self.data)
+
     def __repr__(self):
-        """
-        这个是在programming bitcoin 这本书中学来的
-        如果没有它，返回的就只是 tree 的地址，
-        类似 [<vor.tree_node.TreeNode at 0x1a0763770a0>] 这样
-        有这个之后，返回的是 tree.data 的内容
-        """
-        return (self.data)
+        xs = [self.name]
+        for node in self.children[:-1]:
+            node._to_strings(xs, _last=False)
+        self.children[:-1]._to_strings(xs, _last=True)
+        return '\n'.join(xs)
+    
+    def __str__(self):
+        return self.__repr__()
 
     def show_tree(self, prefix='', last=True):
         """
